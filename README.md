@@ -1,1 +1,1 @@
-![alt text](https://cs5.pikabu.ru/post_img/2015/04/28/7/1430218350_1274273617.jpg)
+![alt text](https://github.com/NikAlex/Algorithms/blob/master/%D0%9C%D0%B5%D0%BC%D1%87%D0%B8%D0%BA.jpg)
