@@ -1,3 +1,6 @@
+#include "header.hpp"
+
+
 int main(int argc, char* argv[]) {
 	Rubik rubik;
 	char buff[56] = { "" };
