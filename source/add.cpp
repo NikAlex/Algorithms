@@ -1,3 +1,6 @@
+#include "header.hpp"
+
+
 int Rubik::searchEdge(const char& ar, const char& ab) const {
 	int position = 0;
 	if ((edge[0].up == ar && edge[0].down == ab) || (edge[0].up == ab && edge[0].down == ar))
