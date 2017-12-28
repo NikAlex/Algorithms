@@ -12,32 +12,28 @@ using namespace std;
 
 
 class Rubik {
-private:
-	
-	char Buff[55];
-	char *Cube[6][9];
-	int searchEdge(const char& ar, const char& ab) const;
-	int searchCorner(const char& a, const char& iz, const char& de) const;
-	void sequence(const string& sec, vector<char>& solution);
-	void whiteCross(vector<char>& solution);
-	void cornersFirstStep(vector<char>& solution);
-	void secondStep(vector<char>& solution);
-	void yellowCross(vector<char>& solution);
-	void permutationFinalCorners(vector<char>& solution);
-	void positionFinalCorners(vector<char>& solution);
+	private:
+		char Buff[55];
+		char *Cube[6][9];
+		int searchEdge(const char& ar, const char& ab) const;
+		int searchCorner(const char& a, const char& iz, const char& de) const;
+		void sequence(const string& sec, vector<char>& solution);
+		void whiteCross(vector<char>& solution);
+		void cornersFirstStep(vector<char>& solution);
+		void secondStep(vector<char>& solution);
+		void yellowCross(vector<char>& solution);
+		void permutationFinalCorners(vector<char>& solution);
+		void positionFinalCorners(vector<char>& solution);
 
-public:
-
-	void getBuff(char(&buff)[55]);
-	bool isSolved() const;
-	void Rotate(vector<char>& solution, char& side);
-	void solve(vector<char>& solution);
-	void readRubik();
+	public:
+		void getBuff(char(&buff)[55]);
+		bool isSolved() const;
+		void Rotate(vector<char>& solution, char& side);
+		void solve(vector<char>& solution);
+		void readRubik();
 };
 
-bool test(std::istream& is, char(*buff));
-
-
+bool test(istream& is, char(*buff));
 
 void Rubik::getBuff(char(&buff)[55]) {
 	for (int i = 0; i < 54; i++) {
@@ -45,18 +41,15 @@ void Rubik::getBuff(char(&buff)[55]) {
 	}
 }
 
-
 int Rubik::searchEdge(const char& ar, const char& ab) const {
 	int position = 0;
 	int u[] = { 7,5,1,3,46,50,52,48,23,39,41,21 };
 	int d[] = { 19,28,37,10,25,34,43,16,30,32,12,14 };
 
-
 	for (int i = 0; i < 12; i++) {
 		if ((Buff[u[i]] == ar && Buff[d[i]] == ab) || (Buff[u[i]] == ab && Buff[d[i]] == ar))
 				position = i;
 	}
-
 	return position;
 }
 
@@ -75,7 +68,6 @@ int Rubik::searchCorner(const char& a, const char& iz, const char& de) const {
 			((Buff[u[i]] == iz) && (Buff[l[i]] == de) && (Buff[r[i]] == a)))
 				position = i;
 	}
-
 	return position;
 }
 
@@ -83,13 +75,19 @@ void Rubik::sequence(const string& sec, vector<char>& solution) {
 	char h;
 
 	for (unsigned int i = 0; i<sec.size(); ++i) {
+		if (sec == "") return;
 		h = sec[i];
 		Rotate(solution, h);
 	}
 }
 
 void Rubik::whiteCross(vector<char>& solution) {
+	
+
+
 	int position = searchEdge('w', 'g'); // White, green.
+
+
 	if (position == 0) {
 		if (Buff[19] == 'w') // FuRU
 			sequence("FuRU", solution);
@@ -341,8 +339,12 @@ void Rubik::whiteCross(vector<char>& solution) {
 		else // uFU
 			sequence("uFU", solution);
 	}
+	
+
 }
+
 void Rubik::cornersFirstStep(vector<char>& solution) {
+
 	int position = searchCorner('w', 'g', 'r'); // White, green and red
 	if (position == 0) {
 		if (Buff[6] == 'w') // LDlrdR
@@ -513,7 +515,9 @@ void Rubik::cornersFirstStep(vector<char>& solution) {
 			sequence("BDb", solution);
 	}
 }
+
 void Rubik::secondStep(vector<char>& solution) {
+
 	int position = searchEdge('g', 'o'); // Green/orange
 	if (position == 4) {
 		if (Buff[25] == 'g') // dfDF
@@ -605,7 +609,7 @@ void Rubik::secondStep(vector<char>& solution) {
 			sequence("BDbdlDL", solution);
 	}
 
-	sequence("U", solution); //
+	sequence("U", solution); 
 	position = searchEdge('r', 'b'); // Blue/red
 	if (position == 4) {
 		if (Buff[25] == 'r') // RDr
@@ -714,8 +718,11 @@ void Rubik::secondStep(vector<char>& solution) {
 			sequence("rdRDFDfDrDRDFdf", solution);
 	}
 }
+
 void Rubik::yellowCross(vector<char>& solution) {
+
 	bool repeat;
+
 	if ((Buff[25] == 'y') && (Buff[34] == 'y') &&
 		(Buff[43] == 'y') && (Buff[16] == 'y'))
 		sequence("LDBdblfrdRDF", solution);
@@ -725,11 +732,9 @@ void Rubik::yellowCross(vector<char>& solution) {
 	else if ((Buff[25] != 'y') && (Buff[34] == 'y') &&
 		(Buff[43] != 'y') && (Buff[16] == 'y'))
 		sequence("lfdFDL", solution);
-
 	else if ((Buff[25] != 'y') && (Buff[34] != 'y') &&
 		(Buff[43] == 'y') && (Buff[16] == 'y'))
 		sequence("LDBdbl", solution);
-
 	else if ((Buff[25] != 'y') && (Buff[34] == 'y') &&
 		(Buff[43] == 'y') && (Buff[16] != 'y'))
 		sequence("BDRdrb", solution);
@@ -740,9 +745,9 @@ void Rubik::yellowCross(vector<char>& solution) {
 		(Buff[43] != 'y') && (Buff[16] == 'y'))
 		sequence("FDLdlf", solution);
 
-
 	repeat = true;
 	int contador = 0;
+
 	while (repeat) {
 		if ((Buff[25] == 'r') && (Buff[34] == 'g') &&
 			(Buff[43] == 'b') && (Buff[16] == 'o')) { // bdBdbD2Bd
@@ -793,7 +798,9 @@ void Rubik::yellowCross(vector<char>& solution) {
 		}
 	}
 }
+
 void Rubik::permutationFinalCorners(vector<char>& solution) {
+
 	bool repeat = true;
 	int i = 0;
 	while (repeat) {
@@ -831,10 +838,9 @@ void Rubik::permutationFinalCorners(vector<char>& solution) {
 		}
 		else // LdrDldRD
 			sequence("LdrDldRD", solution);
-		
 	}
-
 }
+
 void Rubik::positionFinalCorners(vector<char>& solution) {
 
 	if ((Buff[45] == 'y') && (Buff[33] == 'y') &&
@@ -883,15 +889,12 @@ void Rubik::positionFinalCorners(vector<char>& solution) {
 		(Buff[15] == 'y') && (Buff[42] == 'y')) // LD2ldLdlrD2RDrDR ldLdlD2LRDrDRD2r
 		sequence("LDDldLdlrDDRDrDRldLdlDDLRDrDRDDr", solution);
 
-
 	int yellows = 0;
 	if (Buff[45] == 'y') yellows++;
 	if (Buff[47] == 'y') yellows++;
 	if (Buff[51] == 'y') yellows++;
 	if (Buff[53] == 'y') yellows++;
 
-
-	
 	if (yellows == 1) {
 		if (Buff[45] == 'y') {
 			if (Buff[33] == 'y') // RUruRUrudRUruRUrudRUruRUruD2
@@ -933,64 +936,18 @@ void Rubik::positionFinalCorners(vector<char>& solution) {
 		}
 	}
 }
+
 bool Rubik::isSolved() const {
-	bool success;
-	if ((Buff[0] == 'w') &&
-		(Buff[1] == 'w') &&
-		(Buff[2] == 'w') &&
-		(Buff[3] == 'w') &&
-		(Buff[4] == 'w') &&
-		(Buff[5] == 'w') &&
-		(Buff[6] == 'w') &&
-		(Buff[7] == 'w') &&
-		(Buff[8] == 'w') &&
 
-		(Buff[9] == 'o') &&
-		(Buff[10] == 'o') &&
-		(Buff[11] == 'o') &&
-		(Buff[12] == 'o') &&
-		(Buff[13] == 'o') &&
-		(Buff[14] == 'o') &&
-		(Buff[15] == 'o') &&
-		(Buff[16] == 'o') &&
-		(Buff[17] == 'o') &&
-
-		(Buff[18] == 'g') &&
-		(Buff[19] == 'g') &&
-		(Buff[20] == 'g') &&
-		(Buff[21] == 'g') &&
-		(Buff[22] == 'g') &&
-		(Buff[23] == 'g') &&
-		(Buff[24] == 'g') &&
-		(Buff[25] == 'g') &&
-		(Buff[26] == 'g') &&
-
-		(Buff[27] == 'r') &&
-		(Buff[28] == 'r') &&
-		(Buff[29] == 'r') &&
-		(Buff[30] == 'r') &&
-		(Buff[31] == 'r') &&
-		(Buff[32] == 'r') &&
-		(Buff[33] == 'r') &&
-		(Buff[34] == 'r') &&
-		(Buff[35] == 'r') &&
-
-		(Buff[36] == 'b') &&
-		(Buff[37] == 'b') &&
-		(Buff[38] == 'b') &&
-		(Buff[39] == 'b') &&
-		(Buff[40] == 'b') &&
-		(Buff[41] == 'b') &&
-		(Buff[42] == 'b') &&
-		(Buff[43] == 'b') &&
-		(Buff[44] == 'b'))
-		success = true;
-	else
-		success = false;
+	bool success = false;
+	int test=0;
+	for (int i = 0; i < 53; i++) {
+		if (Buff[i] != Buff[i + 1]) test++;
+	}
+	if (test == 5) success = true;
 
 	return success;
 }
-
 
 void Rubik::Rotate(vector<char>& solution, char& rot) {
 
@@ -999,83 +956,78 @@ void Rubik::Rotate(vector<char>& solution, char& rot) {
 	int b, c, d, e, f;
 	int a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
 	int side = 0;
-	
 
-if (tolower(rot) == 'u') side = 0;
-else if (tolower(rot) == 'l') side = 1;
-else if (tolower(rot) == 'f') side = 2;
-else if (tolower(rot) == 'r') side = 3;
-else if (tolower(rot) == 'b') side = 4;
-else if (tolower(rot) == 'd') side = 5;
+	if (tolower(rot) == 'u') side = 0;
+	else if (tolower(rot) == 'l') side = 1;
+	else if (tolower(rot) == 'f') side = 2;
+	else if (tolower(rot) == 'r') side = 3;
+	else if (tolower(rot) == 'b') side = 4;
+	else if (tolower(rot) == 'd') side = 5;
 
-if (tolower(rot) != rot) {
+	if (tolower(rot) != rot) {
+		cornerSave = *Cube[side][0];
+		*Cube[side][0] = *Cube[side][6];
+		*Cube[side][6] = *Cube[side][8];
+		*Cube[side][8] = *Cube[side][2];
+		*Cube[side][2] = cornerSave;
 
+		sideSave = *Cube[side][1];
+		*Cube[side][1] = *Cube[side][3];
+		*Cube[side][3] = *Cube[side][7];
+		*Cube[side][7] = *Cube[side][5];
+		*Cube[side][5] = sideSave;
 
+		if (side == 0) { b = 4; c = 3; d = 2; e = 1; a0 = 2; a1 = 1; a2 = 0; a3 = 2; a4 = 1; a5 = 0; a6 = 2; a7 = 1; a8 = 0; a9 = 2; a10 = 1; a11 = 0; }
+		else if (side == 1) { b = 0; c = 2; d = 5; e = 4; a0 = 0; a1 = 3; a2 = 6; a3 = 0; a4 = 3; a5 = 6; a6 = 0; a7 = 3; a8 = 6; a9 = 8; a10 = 5; a11 = 2; }
+		else if (side == 2) { b = 0; c = 3; d = 5; e = 1; a0 = 6; a1 = 7; a2 = 8; a3 = 0; a4 = 3; a5 = 6; a6 = 2; a7 = 1; a8 = 0; a9 = 8; a10 = 5; a11 = 2; }
+		else if (side == 3) { b = 0; c = 4; d = 5; e = 2; a0 = 8; a1 = 5; a2 = 2; a3 = 0; a4 = 3; a5 = 6; a6 = 8; a7 = 5; a8 = 2; a9 = 8; a10 = 5; a11 = 2; }
+		else if (side == 4) { b = 0; c = 1; d = 5; e = 3; a0 = 2; a1 = 1; a2 = 0; a3 = 0; a4 = 3; a5 = 6; a6 = 6; a7 = 7; a8 = 8; a9 = 8; a10 = 5; a11 = 2; }
+		else if (side == 5) { b = 2; c = 3; d = 4; e = 1; a0 = 6; a1 = 7; a2 = 8; a3 = 6; a4 = 7; a5 = 8; a6 = 6; a7 = 7; a8 = 8; a9 = 6; a10 = 7; a11 = 8; }
+	}
 
-	cornerSave = *Cube[side][0];
-	*Cube[side][0] = *Cube[side][6];
-	*Cube[side][6] = *Cube[side][8];
-	*Cube[side][8] = *Cube[side][2];
-	*Cube[side][2] = cornerSave;
+	if (tolower(rot) == rot) {
 
-	sideSave = *Cube[side][1];
-	*Cube[side][1] = *Cube[side][3];
-	*Cube[side][3] = *Cube[side][7];
-	*Cube[side][7] = *Cube[side][5];
-	*Cube[side][5] = sideSave;
+		cornerSave = *Cube[side][0];
+		*Cube[side][0] = *Cube[side][2];
+		*Cube[side][2] = *Cube[side][8];
+		*Cube[side][8] = *Cube[side][6];
+		*Cube[side][6] = cornerSave;
 
-	if (side == 0) { b = 4; c = 3; d = 2; e = 1; a0 = 2; a1 = 1; a2 = 0; a3 = 2; a4 = 1; a5 = 0; a6 = 2; a7 = 1; a8 = 0; a9 = 2; a10 = 1; a11 = 0; }
-	else if (side == 1) { b = 0; c = 2; d = 5; e = 4; a0 = 0; a1 = 3; a2 = 6; a3 = 0; a4 = 3; a5 = 6; a6 = 0; a7 = 3; a8 = 6; a9 = 8; a10 = 5; a11 = 2; }
-	else if (side == 2) { b = 0; c = 3; d = 5; e = 1; a0 = 6; a1 = 7; a2 = 8; a3 = 0; a4 = 3; a5 = 6; a6 = 2; a7 = 1; a8 = 0; a9 = 8; a10 = 5; a11 = 2; }
-	else if (side == 3) { b = 0; c = 4; d = 5; e = 2; a0 = 8; a1 = 5; a2 = 2; a3 = 0; a4 = 3; a5 = 6; a6 = 8; a7 = 5; a8 = 2; a9 = 8; a10 = 5; a11 = 2; }
-	else if (side == 4) { b = 0; c = 1; d = 5; e = 3; a0 = 2; a1 = 1; a2 = 0; a3 = 0; a4 = 3; a5 = 6; a6 = 6; a7 = 7; a8 = 8; a9 = 8; a10 = 5; a11 = 2; }
-	else if (side == 5) { b = 2; c = 3; d = 4; e = 1; a0 = 6; a1 = 7; a2 = 8; a3 = 6; a4 = 7; a5 = 8; a6 = 6; a7 = 7; a8 = 8; a9 = 6; a10 = 7; a11 = 8; }
+		sideSave = *Cube[side][1];
+		*Cube[side][1] = *Cube[side][5];
+		*Cube[side][5] = *Cube[side][7];
+		*Cube[side][7] = *Cube[side][3];
+		*Cube[side][3] = sideSave;
+
+		if (side == 0) { b = 4; c = 1; d = 2; e = 3; a0 = 0; a1 = 1; a2 = 2; a3 = 0; a4 = 1; a5 = 2; a6 = 0; a7 = 1; a8 = 2; a9 = 0; a10 = 1; a11 = 2; }
+		else if (side == 1) { b = 0; c = 4; d = 5; e = 2; a0 = 6; a1 = 3; a2 = 0; a3 = 2; a4 = 5; a5 = 8; a6 = 6; a7 = 3; a8 = 0; a9 = 6; a10 = 3; a11 = 0; }
+		else if (side == 2) { b = 0; c = 1; d = 5; e = 3; a0 = 8; a1 = 7; a2 = 6; a3 = 2; a4 = 5; a5 = 8; a6 = 0; a7 = 1; a8 = 2; a9 = 6; a10 = 3; a11 = 0; }
+		else if (side == 3) { b = 0; c = 2; d = 5; e = 4; a0 = 2; a1 = 5; a2 = 8; a3 = 2; a4 = 5; a5 = 8; a6 = 2; a7 = 5; a8 = 8; a9 = 6; a10 = 3; a11 = 0; }
+		else if (side == 4) { b = 0; c = 3; d = 5; e = 1; a0 = 0; a1 = 1; a2 = 2; a3 = 2; a4 = 5; a5 = 8; a6 = 8; a7 = 7; a8 = 6; a9 = 6; a10 = 3; a11 = 0; }
+		else if (side == 5) { b = 2; c = 1; d = 4; e = 3; a0 = 8; a1 = 7; a2 = 6; a3 = 8; a4 = 7; a5 = 6; a6 = 8; a7 = 7; a8 = 6; a9 = 8; a10 = 7; a11 = 6; }
+	}
+
+	spotSave0 = *Cube[b][a0];
+	spotSave1 = *Cube[b][a1];
+	spotSave2 = *Cube[b][a2];
+	*Cube[b][a0] = *Cube[e][a9];
+	*Cube[b][a1] = *Cube[e][a10];
+	*Cube[b][a2] = *Cube[e][a11];
+	*Cube[e][a9] = *Cube[d][a6];
+	*Cube[e][a10] = *Cube[d][a7];
+	*Cube[e][a11] = *Cube[d][a8];
+	*Cube[d][a6] = *Cube[c][a3];
+	*Cube[d][a7] = *Cube[c][a4];
+	*Cube[d][a8] = *Cube[c][a5];
+	*Cube[c][a3] = spotSave0;
+	*Cube[c][a4] = spotSave1;
+	*Cube[c][a5] = spotSave2;
+
+	solution.push_back(rot);
 }
-
-if (tolower(rot) == rot) {
-
-	cornerSave = *Cube[side][0];
-	*Cube[side][0] = *Cube[side][2];
-	*Cube[side][2] = *Cube[side][8];
-	*Cube[side][8] = *Cube[side][6];
-	*Cube[side][6] = cornerSave;
-
-	sideSave = *Cube[side][1];
-	*Cube[side][1] = *Cube[side][5];
-	*Cube[side][5] = *Cube[side][7];
-	*Cube[side][7] = *Cube[side][3];
-	*Cube[side][3] = sideSave;
-
-	if (side == 0) { b = 4; c = 1; d = 2; e = 3; a0 = 0; a1 = 1; a2 = 2; a3 = 0; a4 = 1; a5 = 2; a6 = 0; a7 = 1; a8 = 2; a9 = 0; a10 = 1; a11 = 2; }
-	else if (side == 1) { b = 0; c = 4; d = 5; e = 2; a0 = 6; a1 = 3; a2 = 0; a3 = 2; a4 = 5; a5 = 8; a6 = 6; a7 = 3; a8 = 0; a9 = 6; a10 = 3; a11 = 0; }
-	else if (side == 2) { b = 0; c = 1; d = 5; e = 3; a0 = 8; a1 = 7; a2 = 6; a3 = 2; a4 = 5; a5 = 8; a6 = 0; a7 = 1; a8 = 2; a9 = 6; a10 = 3; a11 = 0; }
-	else if (side == 3) { b = 0; c = 2; d = 5; e = 4; a0 = 2; a1 = 5; a2 = 8; a3 = 2; a4 = 5; a5 = 8; a6 = 2; a7 = 5; a8 = 8; a9 = 6; a10 = 3; a11 = 0; }
-	else if (side == 4) { b = 0; c = 3; d = 5; e = 1; a0 = 0; a1 = 1; a2 = 2; a3 = 2; a4 = 5; a5 = 8; a6 = 8; a7 = 7; a8 = 6; a9 = 6; a10 = 3; a11 = 0; }
-	else if (side == 5) { b = 2; c = 1; d = 4; e = 3; a0 = 8; a1 = 7; a2 = 6; a3 = 8; a4 = 7; a5 = 6; a6 = 8; a7 = 7; a8 = 6; a9 = 8; a10 = 7; a11 = 6; }
-}
-
-spotSave0 = *Cube[b][a0];
-spotSave1 = *Cube[b][a1];
-spotSave2 = *Cube[b][a2];
-*Cube[b][a0] = *Cube[e][a9];
-*Cube[b][a1] = *Cube[e][a10];
-*Cube[b][a2] = *Cube[e][a11];
-*Cube[e][a9] = *Cube[d][a6];
-*Cube[e][a10] = *Cube[d][a7];
-*Cube[e][a11] = *Cube[d][a8];
-*Cube[d][a6] = *Cube[c][a3];
-*Cube[d][a7] = *Cube[c][a4];
-*Cube[d][a8] = *Cube[c][a5];
-*Cube[c][a3] = spotSave0;
-*Cube[c][a4] = spotSave1;
-*Cube[c][a5] = spotSave2;
-
-solution.push_back(rot);
-}
-
-
 
 void Rubik::solve(vector<char>& solution) {
+
 	solution.clear();
 	whiteCross(solution);
 	cornersFirstStep(solution);
@@ -1087,30 +1039,25 @@ void Rubik::solve(vector<char>& solution) {
 
 void Rubik::readRubik() {
 
-
-	int ed[24] = { 7,19,5,28,1,37,3,10,46,25,50,34,52,43,48,16,23,30,39,32,41,12,21,14 }; //На данных позициях стоят реберные элементы up,down
-	int corn[24] = { 6,11,18,8,20,27,2,29,36,0,38,9,45,17,24,47,26,33,53,35,42,51,44,15 }; //На данных позициях стоят угловые элементы up,left,right
-	int sup = 0;
-	int sup2 = 0;
 	int number = 0;
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 9; j++) {
-
 			Cube[i][j] = &Buff[number];
 			number++;
-
 		}
 	}
-
 }
 
-bool test(std::istream& is, char(*buff)) {
+bool test(istream& is, char(*buff)) {
 
 	bool rez = true;
 	int c = 0;
 
 	for (int i = 0; i < 55; i++) is >> buff[i];
-	if (buff[54]) rez = false;
+	if (buff[54]) {
+		rez = false;
+		return rez;
+	}
 
 	for (int i = 0; i < 54; i++) {
 		if (buff[i] == 'w') c = c + 100000;
@@ -1138,6 +1085,7 @@ int main(int argc, char* argv[]) {
 		fout << "error";
 		fin.close();
 		fout.close();
+		system("pause");
 		return 0;
 	}
 	fin.close();
@@ -1148,12 +1096,13 @@ int main(int argc, char* argv[]) {
 	if (rubik.isSolved() == false) {
 		fout << "error";
 		fout.close();
+		system("pause");
 		return 0;
 	}
 
 	for (int i = 0; i < solution.size(); i++) {
-		cout << solution[i];
+		fout << solution[i];
 	}
-	system("pause");
+	
 	return 0;
 }
